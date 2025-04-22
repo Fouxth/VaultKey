@@ -1,11 +1,11 @@
-"use client"
+"use client"  // บ่งบอกว่าเป็น client-side component
 
-import { useState, useEffect } from "react"
-import { ethers } from "ethers"
-import { useWallet } from "./useWallet"
-import { useToast } from "@/components/ui/use-toast"
+import { useState, useEffect } from "react"  // นำเข้า React hooks
+import { ethers } from "ethers"  // นำเข้า ethers.js
+import { useWallet } from "./useWallet"  // นำเข้า wallet hook
+import { useToast } from "@/components/ui/use-toast"  // นำเข้า toast notification
 
-// ABI for the VaultKeyNFT contract
+// ABI ของ VaultKeyNFT contract
 const vaultKeyABI = [
   "function mint() public payable",
   "function hasAccess(address user) public view returns (bool)",
@@ -17,19 +17,21 @@ const vaultKeyABI = [
   "event Transfer(address indexed from, address indexed to, uint256 indexed tokenId)",
 ]
 
+// สร้าง hook สำหรับใช้งาน contract
 export const useVaultContract = () => {
-  const { address, signer, isHoleskyNetwork } = useWallet()
-  const [contract, setContract] = useState<ethers.Contract | null>(null)
-  const [isOwner, setIsOwner] = useState<boolean>(false)
-  const [mintPrice, setMintPrice] = useState<string>("0")
-  const [isMinting, setIsMinting] = useState<boolean>(false)
-  const [hasVaultAccess, setHasVaultAccess] = useState<boolean>(false)
-  const [isLoading, setIsLoading] = useState<boolean>(true)
-  const { toast } = useToast()
+  const { address, signer, isHoleskyNetwork } = useWallet()  // เรียกใช้ wallet hook
+  const [contract, setContract] = useState<ethers.Contract | null>(null)  // state เก็บ contract instance
+  const [isOwner, setIsOwner] = useState<boolean>(false)  // state เก็บสถานะเจ้าของ
+  const [mintPrice, setMintPrice] = useState<string>("0")  // state เก็บราคา mint
+  const [isMinting, setIsMinting] = useState<boolean>(false)  // state เก็บสถานะกำลัง mint
+  const [hasVaultAccess, setHasVaultAccess] = useState<boolean>(false)  // state เก็บสถานะการเข้าถึง
+  const [isLoading, setIsLoading] = useState<boolean>(true)  // state เก็บสถานะกำลังโหลด
+  const { toast } = useToast()  // เรียกใช้ toast notification
 
+  // effect สำหรับเริ่มต้น contract
   useEffect(() => {
     const initializeContract = async () => {
-      if (!signer || !address || !isHoleskyNetwork) {
+      if (!signer || !address || !isHoleskyNetwork) {  // เช็คเงื่อนไขที่จำเป็น
         setContract(null)
         setIsOwner(false)
         setHasVaultAccess(false)
@@ -38,24 +40,24 @@ export const useVaultContract = () => {
       }
 
       try {
-        setIsLoading(true)
-        const contractAddress = import.meta.env.VITE_NEXT_PUBLIC_CONTRACT_ADDRESS
+        setIsLoading(true)  // เริ่มสถานะกำลังโหลด
+        const contractAddress = import.meta.env.VITE_NEXT_PUBLIC_CONTRACT_ADDRESS  // ดึงที่อยู่ contract
 
-        if (!contractAddress) {
+        if (!contractAddress) {  // เช็คว่ามีที่อยู่ contract หรือไม่
           console.error("Contract address not found in environment variables")
           setIsLoading(false)
           return
         }
 
+        // สร้าง contract instance
         const vaultContract = new ethers.Contract(contractAddress, vaultKeyABI, signer)
-
         setContract(vaultContract)
 
-        // Check if user has access
+        // เช็คสิทธิ์การเข้าถึง
         const access = await vaultContract.hasAccess(address)
         setHasVaultAccess(access)
 
-        // Get mint price
+        // ดึงราคา mint
         const price = await vaultContract.mintPrice()
         setMintPrice(ethers.utils.formatEther(price))
       } catch (error) {
@@ -66,15 +68,16 @@ export const useVaultContract = () => {
           variant: "destructive",
         })
       } finally {
-        setIsLoading(false)
+        setIsLoading(false)  // จบสถานะกำลังโหลด
       }
     }
 
-    initializeContract()
-  }, [signer, address, isHoleskyNetwork])
+    initializeContract()  // เรียกใช้ฟังก์ชันเริ่มต้น
+  }, [signer, address, isHoleskyNetwork])  // effect ทำงานเมื่อมีการเปลี่ยนแปลงค่าเหล่านี้
 
+  // ฟังก์ชันสำหรับ mint NFT
   const mintNFT = async () => {
-    if (!contract || !signer) {
+    if (!contract || !signer) {  // เช็คว่ามี contract และ signer หรือไม่
       toast({
         title: "Wallet Not Connected",
         description: "Please connect your wallet first.",
@@ -83,7 +86,7 @@ export const useVaultContract = () => {
       return
     }
 
-    if (!isHoleskyNetwork) {
+    if (!isHoleskyNetwork) {  // เช็คว่าอยู่บน Holesky network หรือไม่
       toast({
         title: "Wrong Network",
         description: "Please connect to the Holesky testnet.",
@@ -93,58 +96,54 @@ export const useVaultContract = () => {
     }
 
     try {
-      setIsMinting(true)
+      setIsMinting(true)  // เริ่มสถานะกำลัง mint
 
-      const price = await contract.mintPrice()
+      const price = await contract.mintPrice()  // ดึงราคา mint
 
-      const tx = await contract.mint({ value: price })
+      const tx = await contract.mint({ value: price })  // ส่ง transaction mint
 
-      toast({
+      toast({  // แสดง toast แจ้งว่ากำลัง mint
         title: "Minting NFT",
         description: "Your transaction is being processed...",
       })
 
-      await tx.wait()
+      await tx.wait()  // รอให้ transaction เสร็จสิ้น
 
-      // ✅ Re-check access after mint
-      const access = await contract.hasAccess(address)
-      setHasVaultAccess(access) // ← สำคัญที่สุด!
-
-      toast({
-        title: "NFT Minted Successfully!",
-        description: "Your Vault Key NFT has been minted!",
+      toast({  // แสดง toast แจ้งว่า mint สำเร็จ
+        title: "Success!",
+        description: "Your NFT has been minted successfully.",
       })
-    } catch (error: any) {
+
+      // เช็คสิทธิ์การเข้าถึงอีกครั้ง
+      const access = await contract.hasAccess(address)
+      setHasVaultAccess(access)
+    } catch (error) {
       console.error("Error minting NFT:", error)
       toast({
         title: "Minting Failed",
-        description: error.message?.includes("insufficient funds")
-          ? "Insufficient funds in your wallet."
-          : "There was an error minting your NFT.",
+        description: "Failed to mint your NFT. Please try again.",
         variant: "destructive",
       })
     } finally {
-      setIsMinting(false)
+      setIsMinting(false)  // จบสถานะกำลัง mint
     }
   }
 
+  // ฟังก์ชันตรวจสอบสิทธิ์การเข้าถึง
   const checkAccess = async () => {
-    if (!contract || !address) {
-      setHasVaultAccess(false)
-      return false
-    }
+    if (!contract || !address) return false  // เช็คเงื่อนไขที่จำเป็น
 
     try {
-      const access = await contract.hasAccess(address)
-      setHasVaultAccess(access)
+      const access = await contract.hasAccess(address)  // เรียกใช้ฟังก์ชัน hasAccess ของ contract
+      setHasVaultAccess(access)  // เซ็ตสถานะการเข้าถึง
       return access
     } catch (error) {
       console.error("Error checking access:", error)
-      setHasVaultAccess(false)
       return false
     }
   }
 
+  // return ค่าต่างๆ ที่จำเป็น
   return {
     contract,
     isOwner,
