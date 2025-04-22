@@ -1,20 +1,22 @@
 {
+  // การตั้งค่าสำหรับ UI components (shadcn/ui)
   "$schema": "https://ui.shadcn.com/schema.json",
   "style": "default",
   "rsc": false,
   "tsx": true,
   "tailwind": {
-    "config": "tailwind.config.ts",
-    "css": "src/index.css",
-    "baseColor": "slate",
-    "cssVariables": true,
-    "prefix": ""
+      "config": "tailwind.config.ts",
+      "css": "src/index.css",
+      "baseColor": "slate",
+      "cssVariables": true,
+      "prefix": ""
   },
+  // Aliases สำหรับการ import
   "aliases": {
-    "components": "@/components",
-    "utils": "@/lib/utils",
-    "ui": "@/components/ui",
-    "lib": "@/lib",
-    "hooks": "@/hooks"
+      "components": "@/components",
+      "utils": "@/lib/utils",
+      "ui": "@/components/ui",
+      "lib": "@/lib",
+      "hooks": "@/hooks"
   }
 }

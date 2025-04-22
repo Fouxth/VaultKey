@@ -257,6 +257,7 @@ const Sidebar = React.forwardRef<
 )
 Sidebar.displayName = "Sidebar"
 
+// SidebarTrigger - ปุ่มสำหรับ toggle sidebar
 const SidebarTrigger = React.forwardRef<
   React.ElementRef<typeof Button>,
   React.ComponentProps<typeof Button>
@@ -283,6 +284,7 @@ const SidebarTrigger = React.forwardRef<
 })
 SidebarTrigger.displayName = "SidebarTrigger"
 
+// SidebarRail - แถบด้านข้างสำหรับปรับขนาด
 const SidebarRail = React.forwardRef<
   HTMLButtonElement,
   React.ComponentProps<"button">
@@ -312,6 +314,7 @@ const SidebarRail = React.forwardRef<
 })
 SidebarRail.displayName = "SidebarRail"
 
+// SidebarInset - ส่วนเนื้อหาหลัก
 const SidebarInset = React.forwardRef<
   HTMLDivElement,
   React.ComponentProps<"main">
@@ -348,6 +351,7 @@ const SidebarInput = React.forwardRef<
 })
 SidebarInput.displayName = "SidebarInput"
 
+// SidebarHeader - ส่วนหัวของ sidebar
 const SidebarHeader = React.forwardRef<
   HTMLDivElement,
   React.ComponentProps<"div">
