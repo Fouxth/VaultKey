@@ -7,6 +7,13 @@
 - 🔐 หน้าที่ต้องใช้ NFT: `/vault` (มีระบบตรวจสอบสิทธิ์)
 - 🔌 เชื่อมต่อกับ **MetaMask** และใช้เครือข่าย **Holesky Testnet**
 - 🚀 ใช้ Smart Contract เขียนด้วย **Solidity (ERC-721)** และ Deploy ด้วย **Hardhat**
+---
+
+![image](https://github.com/user-attachments/assets/bb29c705-db45-4303-b3f4-06bca2c7e337)
+![image](https://github.com/user-attachments/assets/c3a70101-9ace-4c49-8eff-6d6cb4b429bd)
+![image](https://github.com/user-attachments/assets/08994e83-6996-4c10-a8e8-012a7548b7ee)
+![image](https://github.com/user-attachments/assets/766dc0e7-3c4b-41d2-bac5-74e83440bf66)
+
 
 ---
 
