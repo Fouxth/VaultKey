@@ -7,7 +7,7 @@ const DevelopersPage = () => {
   const developers = [
     {
       name: "Patarapisit Thongkerd",
-      role: "FullStack Developer",
+      role: "StudentId : 65007912",
       // bio: "React specialist focused on creating intuitive and responsive user interfaces. Passionate about web3 technologies and decentralized applications.",
       avatar: "/IMG_1515.png?height=200&width=200",
       // github: "https://github.com",
@@ -16,7 +16,7 @@ const DevelopersPage = () => {
     },
     {
       name: "Thanakorn Singkom",
-      role: "Project Lead",
+      role: "StudentId : 65007905",
       // bio: "Creative director with a background in UX/UI design and project management. Bridging the gap between technical implementation and user experience.",
       avatar: "/462560122_584464394082815_9066323379568250970_n.jpg?height=200&width=200",
       // github: "https://github.com",
@@ -25,7 +25,7 @@ const DevelopersPage = () => {
     },
     {
       name: "Hannarong Boonyuen",
-      role: "FullStack Developer",
+      role: "StudentId : 65057638",
       // bio: "Blockchain enthusiast with 5+ years of experience in Solidity development. Specialized in secure NFT implementations and access control systems.",
       avatar: "/462556490_548955694689050_2635476944577785612_n.jpg?height=200&width=200",
       // github: "https://github.com",
